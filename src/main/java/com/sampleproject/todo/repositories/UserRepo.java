@@ -10,4 +10,5 @@ import com.sampleproject.todo.models.User;
 @Repository
 public interface UserRepo extends JpaRepository<User, Integer>{
 	//Optional<User> findById(Integer id);
+	User findByUserName(String str);
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sampleproject.todo.models.ListTodo;
 import com.sampleproject.todo.models.User;
+import com.sampleproject.todo.models.UserAuthentication;
 import com.sampleproject.todo.repositories.UserRepo;
 
 import net.minidev.json.JSONValue;
@@ -27,8 +28,14 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.POST, value = "user/new", produces = {org.springframework.http.MediaType.APPLICATION_JSON_VALUE})
 	public User addUser(@RequestBody User user)
 	{
+		try {
 		System.out.println(user.toString());
 		return repo.save(user);
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
 	}
 	@RequestMapping(method = RequestMethod.PUT, value = "user/{id}", produces = {org.springframework.http.MediaType.APPLICATION_JSON_VALUE})
 	public User changeUser(@RequestBody ListTodo str,@PathVariable(name = "id") int id)
@@ -38,7 +45,8 @@ public class UserController {
 		System.out.println(id+Arrays.toString(str.getList()));
 		return repo.save(temp);	
 	}
-	@RequestMapping(method = RequestMethod.GET, value = "user/{id}", produces = {org.springframework.http.MediaType.APPLICATION_JSON_VALUE})
+	@RequestMapping(method = RequestMethod.GET, value = "user/{id}"
+			+ "", produces = {org.springframework.http.MediaType.APPLICATION_JSON_VALUE})
 	public Optional<User> getUser(@PathVariable int id)
 	{
 		return repo.findById(id);
@@ -48,5 +56,16 @@ public class UserController {
 	 * {org.springframework.http.MediaType.APPLICATION_JSON_VALUE}) public User
 	 * addUser(@RequestBody User user) { return repo.save(user); }
 	 */
+	@RequestMapping(method = RequestMethod.POST, value = "user/check"
+			+ "", produces = {org.springframework.http.MediaType.APPLICATION_JSON_VALUE})
+	public User getUser(@RequestBody UserAuthentication au)
+	{
+		User temp=repo.findByUserName(au.getUserName());
+		if(temp!=null)
+		{
+				return temp;
+		}
+		else return null;
+	}
 }
 
